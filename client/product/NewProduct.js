@@ -12,7 +12,6 @@ import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
 import {create} from './api-product.js'
 import {Link, Redirect} from 'react-router-dom'
-import {runNFTUpload} from '../nftport/upload.js'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -78,6 +77,7 @@ export default function NewProduct({match}) {
     values.category && productData.append('category', values.category)
     values.quantity && productData.append('quantity', values.quantity)
     values.price && productData.append('price', values.price)
+    values.nft && productData.append('nft', values.nft)
 
     create({
       shopId: match.params.shopId
@@ -90,10 +90,6 @@ export default function NewProduct({match}) {
         setValues({...values, error: '', redirect: true})
       }
     })
-
-    if (values.nft) {
-      runNFTUpload(values.name, values.description, values.image)
-    }
   }
 
     if (values.redirect) {

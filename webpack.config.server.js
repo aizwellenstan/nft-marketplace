@@ -1,6 +1,8 @@
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 const CURRENT_WORKING_DIR = process.cwd()
+const webpack = require('webpack');
+require('dotenv').config()
 
 const config = {
     name: "server",
@@ -25,7 +27,12 @@ const config = {
                 use: 'file-loader'
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+          "process.env.NFTPORT_API_KEY": JSON.stringify(process.env.NFTPORT_API_KEY)
+        }),
+    ]
 }
 
 module.exports = config

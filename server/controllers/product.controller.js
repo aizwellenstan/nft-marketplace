@@ -4,6 +4,7 @@ import errorHandler from './../helpers/dbErrorHandler'
 import formidable from 'formidable'
 import fs from 'fs'
 import defaultImage from './../../client/assets/images/default.png'
+import { runNFTUpload } from './nftport/upload'
 
 const create = (req, res, next) => {
   let form = new formidable.IncomingForm()
@@ -19,6 +20,10 @@ const create = (req, res, next) => {
     if(files.image){
       product.image.data = fs.readFileSync(files.image.path)
       product.image.contentType = files.image.type
+      if (fields.nft == 'true') {
+        console.log(fields.nft)
+        runNFTUpload(fields.name, fields.description, files.image.path)
+      }
     }
     try {
       let result = await product.save()
