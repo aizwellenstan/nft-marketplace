@@ -1,5 +1,8 @@
 const path = require('path')
 const CURRENT_WORKING_DIR = process.cwd()
+const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
+require('dotenv').config();
 
 const config = {
     mode: "production",
@@ -25,7 +28,12 @@ const config = {
                 use: 'file-loader'
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+          "process.env.NFTPORT_API_KEY": process.env.NFTPORT_API_KEY
+        }),
+    ]
 }
 
 module.exports = config

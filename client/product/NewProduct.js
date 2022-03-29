@@ -4,6 +4,7 @@ import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
+import Checkbox from '@material-ui/core/Checkbox'
 import FileUpload from '@material-ui/icons/AddPhotoAlternate'
 import auth from './../auth/auth-helper'
 import Typography from '@material-ui/core/Typography'
@@ -11,6 +12,7 @@ import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
 import {create} from './api-product.js'
 import {Link, Redirect} from 'react-router-dom'
+import {runNFTUpload} from '../nftport/upload.js'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -54,14 +56,18 @@ export default function NewProduct({match}) {
       category: '',
       quantity: '',
       price: '',
+      nft: false,
       redirect: false,
       error: ''
   })
   const jwt = auth.isAuthenticated()
   const handleChange = name => event => {
-    const value = name === 'image'
+    let value = name === 'image'
       ? event.target.files[0]
       : event.target.value
+    if (name == 'nft') {
+      value = !values.nft
+    }
     setValues({...values,  [name]: value })
   }
   const clickSubmit = () => {
@@ -84,6 +90,10 @@ export default function NewProduct({match}) {
         setValues({...values, error: '', redirect: true})
       }
     })
+
+    if (values.nft) {
+      runNFTUpload(values.name, values.description, values.image)
+    }
   }
 
     if (values.redirect) {
@@ -121,6 +131,7 @@ export default function NewProduct({match}) {
               <Icon color="error" className={classes.error}>error</Icon>
               {values.error}</Typography>)
           }
+          <Checkbox id="nft" label="Create Nft" value={values.nft} onChange={handleChange('nft')}/> Create Nft
         </CardContent>
         <CardActions>
           <Button color="primary" variant="contained" onClick={clickSubmit} className={classes.submit}>Submit</Button>
