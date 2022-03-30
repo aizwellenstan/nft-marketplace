@@ -24,6 +24,9 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: "Price is required"
   },
+  url: {
+    type: String
+  },
   updated: Date,
   created: {
     type: Date,

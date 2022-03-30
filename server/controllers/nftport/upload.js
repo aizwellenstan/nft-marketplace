@@ -1,8 +1,6 @@
 const runNFTUpload = (name, description, file) => {
-    console.log(name)
-    console.log(description)
-    console.log(file)
-    nftPortUploader(name, description, file)
+    let url = nftPortUploader(name, description, file)
+    return url
 }
 
 import config from '../../../config/config'
@@ -19,32 +17,40 @@ const TIMEOUT = 1000; // Milliseconds. Extend this if needed to wait for each up
 const allMetadata = [];
 
 async function nftPortUploader(name, description, file) {
-    let metaData = {}
-    let response = await nftPortFileUploader(file);
-    let imageUrl = response.ipfs_url;
-    metaData.animation_url = imageUrl;
-    metaData.file_url = imageUrl;
-    metaData.image = imageUrl;
-    metaData.custom_fields = {};
-    metaData.custom_fields.edition = Date.now();
-    metaData.name = name;
-    metaData.description = description;
-    metaData.attributes = [];
+  let openSeaUrl = ""
+  let metaData = {}
+  let response = await nftPortFileUploader(file);
+  let imageUrl = response.ipfs_url;
+  metaData.animation_url = imageUrl;
+  metaData.file_url = imageUrl;
+  metaData.image = imageUrl;
+  metaData.custom_fields = {};
+  metaData.custom_fields.edition = Date.now();
+  metaData.name = name;
+  metaData.description = description;
+  metaData.attributes = [];
 
-    let filePath = `${file.substr(0,file.lastIndexOf('/'))}/${name}_${description}_${metaData.custom_fields}.json`;
-    fs.writeFile(filePath, JSON.stringify(metaData), (err)=>{
-      if(err) console.log(`error!::${err}`);
-      let jsonFile = fs.readFileSync(filePath);
-      response = nftPortMetaUploader(jsonFile);
-      response.then(function(res) {
-        metaData.metadata_uri = res.metadata_uri;
-        fs.unlink(filePath, function (err) {
-          if (err) throw err;
-        });
-        let wallet = MINT_TO_ADDRESS
-        mint(metaData, wallet)
+  let filePath = `${file.substr(0,file.lastIndexOf('/'))}/${name}_${description}_${metaData.custom_fields}.json`;
+  fs.writeFile(filePath, JSON.stringify(metaData), (err)=>{
+    if(err) console.log(`error!::${err}`);
+    let jsonFile = fs.readFileSync(filePath);
+    response = nftPortMetaUploader(jsonFile);
+    response.then(function(res) {
+      metaData.metadata_uri = res.metadata_uri;
+      fs.unlink(filePath, function (err) {
+        if (err) throw err;
+      });
+      let wallet = MINT_TO_ADDRESS
+      let mintRes = mint(metaData, wallet)
+      mintRes.then(function(res) {
+        openSeaUrl = `https://opensea.io/assets/matic/${res.contract_address}/${metaData.custom_fields.edition}`
+        console.log(openSeaUrl)
+        return openSeaUrl
       })
-    });
+    })
+  });
+  
+  return openSeaUrl
 }
 
 function timer(ms) {
