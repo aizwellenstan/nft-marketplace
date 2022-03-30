@@ -30,7 +30,10 @@ const config = {
     },
     plugins: [
         new webpack.DefinePlugin({
-          "process.env.NFTPORT_API_KEY": JSON.stringify(process.env.NFTPORT_API_KEY)
+          "process.env.NFTPORT_API_KEY": JSON.stringify(process.env.NFTPORT_API_KEY),
+          "process.env.CONTRACT_ADDRESS": JSON.stringify(process.env.CONTRACT_ADDRESS),
+          "process.env.WALLET_ADDRESS": JSON.stringify(process.env.WALLET_ADDRESS),
+          "process.env.CHAIN": JSON.stringify(process.env.CHAIN)
         }),
     ]
 }
