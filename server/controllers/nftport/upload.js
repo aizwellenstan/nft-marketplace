@@ -36,7 +36,7 @@ async function runNFTUpload(name, description, file, product) {
       const wallet = product.wallet
       const mintRes = mint(metaData, wallet)
       mintRes.then(async function(res) {
-        openSeaUrl = `https://opensea.io/assets/matic/${res.contract_address}/${metaData.custom_fields.edition}`
+        const openSeaUrl = `https://opensea.io/assets/matic/${res.contract_address}/${metaData.custom_fields.edition}`
         product.url = openSeaUrl
         try {
           await product.save()

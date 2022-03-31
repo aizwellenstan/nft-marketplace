@@ -81,6 +81,7 @@ export default function NewProduct({match}) {
     values.quantity && productData.append('quantity', values.quantity)
     values.price && productData.append('price', values.price)
     values.nft && productData.append('nft', values.nft)
+    values.wallet && productData.append('wallet', values.wallet)
 
     create({
       shopId: match.params.shopId
@@ -124,9 +125,7 @@ export default function NewProduct({match}) {
 	// update account, will cause component re-render
 	const accountChangedHandler = (newAccount) => {
 		setDefaultAccount(newAccount);
-    setValues({...values,  ['wallet']: newAccount})
-    console.log('values.wallet')
-    console.log(values.wallet)
+    setValues({...values,  ['wallet']: newAccount.toString()})
 		getAccountBalance(newAccount.toString());
 	}
 
