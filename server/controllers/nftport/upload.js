@@ -1,9 +1,3 @@
-const runNFTUpload = (name, description, file) => {
-    let url = nftPortUploader(name, description, file)
-    return url
-}
-
-import config from '../../../config/config'
 import FormData from "form-data"
 import fetch from "cross-fetch"
 import * as fs from "fs"
@@ -16,7 +10,7 @@ const TIMEOUT = 1000; // Milliseconds. Extend this if needed to wait for each up
 
 const allMetadata = [];
 
-async function nftPortUploader(name, description, file) {
+async function runNFTUpload(name, description, file, product) {
   let openSeaUrl = ""
   let metaData = {}
   let response = await nftPortFileUploader(file);
@@ -42,10 +36,15 @@ async function nftPortUploader(name, description, file) {
       });
       let wallet = MINT_TO_ADDRESS
       let mintRes = mint(metaData, wallet)
-      mintRes.then(function(res) {
+      mintRes.then(async function(res) {
         openSeaUrl = `https://opensea.io/assets/matic/${res.contract_address}/${metaData.custom_fields.edition}`
-        console.log(openSeaUrl)
-        return openSeaUrl
+        product.url = openSeaUrl
+        try {
+          await product.save()
+          console.log(product)
+        } catch (err){
+          console.log(err)
+        }
       })
     })
   });

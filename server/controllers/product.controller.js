@@ -21,11 +21,7 @@ const create = (req, res, next) => {
       product.image.data = fs.readFileSync(files.image.path)
       product.image.contentType = files.image.type
       if (fields.nft == 'true') {
-        console.log(fields.nft)
-        let res = runNFTUpload(fields.name, fields.description, files.image.path)
-        res.then(function(res) {
-          product.url = res
-        })
+        runNFTUpload(fields.name, fields.description, files.image.path, product)
       }
     }
     try {
