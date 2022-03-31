@@ -123,9 +123,7 @@ export default function Product ({match}) {
                   />
                   <Typography component="p" variant="subtitle1" className={classes.subheading}>
                     {product.description}<br/>
-                    {product.url != "" ? (
-                      <div width="10px"><a href={product.url} target="blank">Get the NFT on OpenSea.io</a></div>
-                    ) : (<></>)}
+                    {product.url == undefined ? (<></>) : (<div width="10px"><a href={product.url} target="blank">Get the NFT on OpenSea.io</a></div>)}
                     
                     <span className={classes.price}>$ {product.price}</span>
                     <Link to={'/shops/'+product.shop._id} className={classes.link}>
