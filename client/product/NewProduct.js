@@ -13,6 +13,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import {create} from './api-product.js'
 import {Link, Redirect} from 'react-router-dom'
 
+import {ethers} from 'ethers'
+
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 600,
@@ -56,6 +58,7 @@ export default function NewProduct({match}) {
       quantity: '',
       price: '',
       nft: false,
+      wallet: '',
       redirect: false,
       error: ''
   })
@@ -91,6 +94,62 @@ export default function NewProduct({match}) {
       }
     })
   }
+
+  const [errorMessage, setErrorMessage] = useState(null);
+	const [defaultAccount, setDefaultAccount] = useState(null);
+	const [userBalance, setUserBalance] = useState(null);
+	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
+
+	const connectWalletHandler = () => {
+		if (window.ethereum && window.ethereum.isMetaMask) {
+			console.log('MetaMask Here!');
+
+			window.ethereum.request({ method: 'eth_requestAccounts'})
+			.then(result => {
+				accountChangedHandler(result[0]);
+				setConnButtonText('Wallet Connected');
+				getAccountBalance(result[0]);
+			})
+			.catch(error => {
+				setErrorMessage(error.message);
+			});
+
+		} else {
+			console.log('Need to install MetaMask');
+			setErrorMessage('Please install MetaMask browser extension to interact');
+      setValues({...values,  ['nft']: false })
+		}
+	}
+
+	// update account, will cause component re-render
+	const accountChangedHandler = (newAccount) => {
+		setDefaultAccount(newAccount);
+    setValues({...values,  ['wallet']: newAccount})
+    console.log('values.wallet')
+    console.log(values.wallet)
+		getAccountBalance(newAccount.toString());
+	}
+
+	const getAccountBalance = (account) => {
+		window.ethereum.request({method: 'eth_getBalance', params: [account, 'latest']})
+		.then(balance => {
+			setUserBalance(ethers.utils.formatEther(balance));
+		})
+		.catch(error => {
+			setErrorMessage(error.message);
+		});
+	};
+
+	const chainChangedHandler = () => {
+		// reload the page to avoid any errors with chain change mid use of application
+		window.location.reload();
+	}
+
+
+	// // listen for account changes
+	// window.ethereum.on('accountsChanged', accountChangedHandler);
+
+	// window.ethereum.on('chainChanged', chainChangedHandler);
 
     if (values.redirect) {
       return (<Redirect to={'/seller/shop/edit/'+match.params.shopId}/>)
@@ -128,6 +187,14 @@ export default function NewProduct({match}) {
               {values.error}</Typography>)
           }
           <Checkbox id="nft" label="Create Nft" value={values.nft} onChange={handleChange('nft')}/> Create Nft
+          {values.nft ? (
+            <div>
+              <button onClick={connectWalletHandler}>{connButtonText}</button>
+              <h3>Address: {defaultAccount}</h3>
+            </div>
+          ) : (<></>)}
+          <br/>
+          {errorMessage}
         </CardContent>
         <CardActions>
           <Button color="primary" variant="contained" onClick={clickSubmit} className={classes.submit}>Submit</Button>

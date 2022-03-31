@@ -16,7 +16,8 @@ const create = (req, res, next) => {
       })
     }
     let product = new Product(fields)
-    product.shop= req.shop
+    product.shop = req.shop
+    product.wallet = fields.wallet
     if(files.image){
       product.image.data = fs.readFileSync(files.image.path)
       product.image.contentType = files.image.type

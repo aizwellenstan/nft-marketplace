@@ -11,10 +11,9 @@ const TIMEOUT = 1000; // Milliseconds. Extend this if needed to wait for each up
 const allMetadata = [];
 
 async function runNFTUpload(name, description, file, product) {
-  let openSeaUrl = ""
   let metaData = {}
   let response = await nftPortFileUploader(file);
-  let imageUrl = response.ipfs_url;
+  const imageUrl = response.ipfs_url;
   metaData.animation_url = imageUrl;
   metaData.file_url = imageUrl;
   metaData.image = imageUrl;
@@ -24,18 +23,18 @@ async function runNFTUpload(name, description, file, product) {
   metaData.description = description;
   metaData.attributes = [];
 
-  let filePath = `${file.substr(0,file.lastIndexOf('/'))}/${name}_${description}_${metaData.custom_fields}.json`;
+  const filePath = `${file.substr(0,file.lastIndexOf('/'))}/${name}_${description}_${metaData.custom_fields}.json`;
   fs.writeFile(filePath, JSON.stringify(metaData), (err)=>{
     if(err) console.log(`error!::${err}`);
-    let jsonFile = fs.readFileSync(filePath);
+    const jsonFile = fs.readFileSync(filePath);
     response = nftPortMetaUploader(jsonFile);
     response.then(function(res) {
       metaData.metadata_uri = res.metadata_uri;
       fs.unlink(filePath, function (err) {
         if (err) throw err;
       });
-      let wallet = MINT_TO_ADDRESS
-      let mintRes = mint(metaData, wallet)
+      const wallet = product.wallet
+      const mintRes = mint(metaData, wallet)
       mintRes.then(async function(res) {
         openSeaUrl = `https://opensea.io/assets/matic/${res.contract_address}/${metaData.custom_fields.edition}`
         product.url = openSeaUrl
@@ -48,8 +47,6 @@ async function runNFTUpload(name, description, file, product) {
       })
     })
   });
-  
-  return openSeaUrl
 }
 
 function timer(ms) {
