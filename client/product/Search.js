@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   card: {
     margin: 'auto',
     textAlign: 'center',
-    paddingTop: 10,
+    // paddingTop: 10,
     backgroundColor: '#80808024'
   },
   menu: {
