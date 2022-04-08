@@ -9,7 +9,7 @@ import Categories from './../product/Categories'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    margin: 30,
+    // margin: 30,
   }
 }))
 
@@ -53,13 +53,14 @@ export default function Home(){
     return (
       <div className={classes.root}>
         <Grid container spacing={2}>
-          <Grid item xs={8} sm={8}>
+          {/* <Grid item xs={8} sm={8}> */}
+          <Grid item xs={12} sm={12}>
             <Search categories={categories}/>
             <Categories categories={categories}/>
           </Grid>
-          <Grid item xs={4} sm={4}>
+          {/* <Grid item xs={4} sm={4}>
             <Suggestions products={suggestions} title={suggestionTitle}/>
-          </Grid>
+          </Grid> */}
         </Grid>
       </div>
     )

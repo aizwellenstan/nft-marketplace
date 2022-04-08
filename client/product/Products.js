@@ -36,7 +36,8 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center'
   },
   image: {
-    height: '100%'
+    // height: '100%',
+    maxWidth: '100%'
   },
   tileBar: {
     backgroundColor: 'rgba(0, 0, 0, 0.72)',
@@ -56,17 +57,18 @@ export default function Products(props){
       <div className={classes.root}>
       {props.products.length > 0 ?
         (<div className={classes.container}>
-          <GridList cellHeight={200} className={classes.gridList} cols={3}>
+          {/* <GridList cellHeight={200} className={classes.gridList} cols={3}> */}
+          <GridList cellHeight={200} className={classes.gridList} cols={6}>
           {props.products.map((product, i) => (
             <GridListTile key={i} className={classes.tile}>
               <Link to={"/product/"+product._id}><img className={classes.image} src={'/api/product/image/'+product._id} alt={product.name} /></Link>
-              <GridListTileBar className={classes.tileBar}
+              {/* <GridListTileBar className={classes.tileBar}
                 title={<Link to={"/product/"+product._id} className={classes.tileTitle}>{product.name}</Link>}
                 subtitle={<span>$ {product.price}</span>}
                 actionIcon={
                   <AddToCart item={product}/>
                 }
-              />
+              /> */}
             </GridListTile>
           ))}
         </GridList></div>) : props.searched && (<Typography variant="subheading" component="h4" className={classes.title}>No products found! :(</Typography>)}

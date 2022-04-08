@@ -4,11 +4,8 @@ import * as fs from "fs"
 
 const AUTH = process.env.NFTPORT_API_KEY
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-const MINT_TO_ADDRESS = process.env.WALLET_ADDRESS;
 const CHAIN = process.env.CHAIN;
 const TIMEOUT = 1000; // Milliseconds. Extend this if needed to wait for each upload. 1000 = 1 second.
-
-const allMetadata = [];
 
 async function runNFTUpload(name, description, file, product) {
   let metaData = {}

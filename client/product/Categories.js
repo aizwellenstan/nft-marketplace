@@ -61,13 +61,20 @@ export default function Categories(props){
     const abortController = new AbortController()
     const signal = abortController.signal
 
-    list({
-      category: props.categories[0]
-    }, signal).then((data) => {
+    // list({
+    //   category: props.categories[0]
+    // }, signal).then((data) => {
+    //   if (data.error) {
+    //     console.log(data.error)
+    //   } else {
+    //     setProducts(data)
+    //   }
+    // })
+    list({},signal).then((data) => {
       if (data.error) {
         console.log(data.error)
       } else {
-        setProducts(data)
+        setProducts(data.reverse())
       }
     })
     return function cleanup(){
@@ -91,10 +98,10 @@ export default function Categories(props){
     return (
       <div>
         <Card className={classes.card}>
-          <Typography type="title" className={classes.title}>
+          {/* <Typography type="title" className={classes.title}>
             Explore by category
-          </Typography>
-          <div className={classes.root}>
+          </Typography> */}
+          {/* <div className={classes.root}>
             <GridList className={classes.gridList} cols={4}>
               {props.categories.map((tile, i) => (
                 <GridListTile key={i} className={classes.tileTitle} style={{height: '64px', backgroundColor: selected == tile? 'rgba(95, 139, 137, 0.56)':'rgba(95, 124, 139, 0.32)'}}>
@@ -103,7 +110,7 @@ export default function Categories(props){
               ))}
             </GridList>
           </div>
-          <Divider/>
+          <Divider/> */}
           <Products products={products} searched={false}/>
         </Card>
       </div>
