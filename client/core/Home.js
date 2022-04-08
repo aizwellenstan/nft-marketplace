@@ -54,7 +54,7 @@ export default function Home(){
       <div className={classes.root}>
         <Grid container spacing={2}>
           {/* <Grid item xs={8} sm={8}> */}
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
             <Search categories={categories}/>
             <Categories categories={categories}/>
           </Grid>
